@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title>test2</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Faster+One" rel="stylesheet"> 
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+      <header>
+
+      </header>
+
+      <section>
+
+      </section>
+
+      <select id="locality-dropdown" name="locality" onchange="getcard()">
+        
+      </select>
+
+    <p id="outPut">The repo_group ID is: </p>
+    <p id='output1'></p>
+    <p id='output2'></p>
+    <p id='output3'></p>
+    <p id='output4'></p>
+    <script>
+    var header = document.querySelector('header');
+    var mydropdown = document.getElementById('locality-dropdown');
+
+    var select = document.querySelector('select');
+
+//extract api
+    var requestURL = 'http://augur.osshealth.io:5000/api/unstable/repo-groups';
+    var request = new XMLHttpRequest();
+    request.open('GET', requestURL);
+    request.responseType = 'json';
+    request.send();
+    var jsondata = request.response;
+
+    request.onload = function() {
+      var repo_groups = request.response;
+      populateHeader(repo_groups);
+      getdd(repo_groups);
+      // mydropdown.onchange = getcard(repo_groups);
+
+      // getcard(repo_groups);
+     // showData(repo-groups);
+    }
+
+
+
+//create header
+    function populateHeader(jsonObj) {
+      var myH1 = document.createElement('h1');
+      myH1.textContent = jsonObj[1]['rg_name'];
+      header.appendChild(myH1);
+
+      var myPara = document.createElement('p');
+      myPara.textContent = 'repo ' + jsonObj[1]['repo_group_id'];
+      header.appendChild(myPara);
+    }
+
+//prepare dropdown
+        var mydd = document.getElementById('locality-dropdown');
+
+        mydd.length = 0;
+
+        let defaultOption = document.createElement('option');
+        defaultOption.text = ' Please Choose Repo_groups';
+        mydd.add(defaultOption);
+        //mydd.selectedIndex = 0;
+//create dropdown list
+        function getdd(jsonObj){
+          var option; 
+          for (let i = 1; i <jsonObj.length +1;i++){
+              option = document.createElement('option');
+              option.text = jsonObj[i]['rg_name'];
+              option.value = jsonObj[i]['repo_group_id'];
+              mydd.add(option);
+
+          }
+        }
+
+//make the dropdown item clickable
+        function getcard(){
+          var outPut;
+          var output1;
+          var output2;
+          var output3;
+          var output4;
+          var index = mydropdown.selectedIndex;
+
+          outPut = document.getElementById('outPut');
+          output1 = document.getElementById('output1');
+          output2 = document.getElementById('output2');
+          output3 = document.getElementById('output3');
+          output4 = document.getElementById('output4'); 
+          outPut.innerHTML = request.response[index-1]['repo_group_id'];
+          output1.innerHTML = request.response[index-1]['rg_name'];
+          output2.innerHTML = request.response[index-1]['rg_description'];
+          output3.innerHTML = request.response[index-1]['rg_last_modified'];
+          output4.innerHTML = request.response[index-1]['rg_type'];
+          }
+
+    </script>
+
+  </body>
+</html>
