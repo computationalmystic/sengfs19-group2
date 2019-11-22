@@ -1,0 +1,53 @@
+#card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    width: 350px;
+    height: 150px;
+    margin: auto;
+    padding: 2px 16px;
+    display: inline-block;
+}
+
+/*
+#card:hover {
+    
+}*/
+
+#container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#testCSS{
+    display: inline-block;
+    width: 30%;
+    border: 2px solid black;
+    text-align: center;
+    margin: 10px;
+}
+
+#bBorder {
+    background-color: aqua;
+    font-size: 20pt;
+    padding: 20px;
+    border-bottom: 2px solid black;
+}
+
+body > a {
+    text-decoration-line: none;
+    color: black;
+    border: 2px solid black;
+    padding: 5px;
+}
+
+body > a:hover {
+    box-shadow: 2px 2px purple;
+}
+
+h1 {
+    text-align: center;
+}
+
+#inform {
+    visibility: hidden;
+}
