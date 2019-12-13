@@ -8,11 +8,22 @@ var repoIssueMeanCommentsUrl = "/issue-comments-mean";
 // used for select elements...
 var selectedRepoGroupID;
 var selectedRepoGroupName;
+
+var colorArray = [];
 var repoObjects = [];
+var compareReposParticipants = [];
+var compareReposMean = [];
+var compareReposAvgDays = [];
+var compareReposLabels = [];
 var selectVars = [2];
 var urls = [3];
 
-var averageMean, counter = null;
+var averageMean, counter = null
+
+// the bottom three variables are for the graphs shown when a div is clicked
+var totalParticipants, totalMean, totalDays = null
+var chartObject, chartObject_two, chartObject_three = null;
+var chartContainer, chartContainer_two, chartContainer_three = null;
 
 var loadedGroups = false;
 
@@ -208,16 +219,50 @@ function calculateAvgDaysPerComment(url){
 function createDivs(array){
 
     try{
+      // removing divs from the previous iteration
+      if($('#container') != null){
         $('.container').remove();
+      }
 
-        for(var i=0;i<array.length;i++){
-          $('#repolist').append($("<li><a href='#'><div class=container id=issueDivs><h2 id=headerid>" + array[i].name + "</h2><p>ID: " + array[i].id + "</p><p>Total number of participants: " + array[i].participants + "</p><p>Mean amount of comments per issue: " + array[i].mean + " comments</p><p>Average response time for issues to be solved: " + array[i].averageDays + " days</p></div></a></li><br>"));
-        }
-    }
-    catch(e){
-        console.error(e.name);
-        console.error(e.message);
-    }
+      // reseting the arrays/variables used for comparison
+      compareReposParticipants.length = 0;
+      compareReposMean.length = 0;
+      compareReposAvgDays.length = 0;
+      compareReposLabels.length = 0;
+      colorArray.length = 0;
+
+      totalParticipants = 0;
+      totalMean = 0;
+      totalDays = 0;
+
+      var count = 0;
+      for(var i=0;i<array.length;i++){
+        // the function to show the graphs has been attached to the a tag
+        $('#repolist').append($("<li><a href='javascript:showGraphs();'><div class=container id=issueDivs><h2 id=headerid>" + array[i].name + "</h2><p>ID: " + array[i].id + "</p><p>Total number of participants: " + array[i].participants + "</p><p>Mean amount of comments per issue: " + array[i].mean + " comments</p><p>Average response time for issues to be solved: " + array[i].averageDays + " days</p></div></a></li><br>"));
+
+        compareReposLabels.push(array[i].name);
+        compareReposParticipants.push(array[i].participants);
+        compareReposMean.push(array[i].mean);
+        compareReposAvgDays.push(array[i].averageDays);
+
+        colorArray.push(generateColor());
+
+        totalParticipants = totalParticipants + array[i].participants;
+        totalMean = totalMean + (array[i].mean);
+        totalDays = totalDays + (array[i].averageDays);
+
+        count++;
+      }
+
+      compareReposLabels.push("All");
+      compareReposParticipants.push(totalParticipants);
+      compareReposMean.push(totalMean);
+      compareReposAvgDays.push(totalDays);
+  }
+  catch(e){
+      console.error(e.name);
+      console.error(e.message);
+  }
 }
 
 function generateColor(){
@@ -318,6 +363,85 @@ function filterList(){
    }
 }
 
+function showGraphs(){
+
+  if($('#divpiechart') != null){
+    $('#divpiechart').remove();
+  }
+  if($('#divbarchart') != null){
+    $('#divbarchart').remove();
+  }
+  if($('#divhorizontalchart') != null){
+    $('#divhorizontalchart').remove();
+  }
+
+  $('#graph').append($("<canvas id=divpiechart width=400 height=800></canvas>"));
+  $('#graph_two').append($("<canvas id=divbarchart width=400 height=800></canvas>"));
+  $('#graph_three').append($("<canvas id=divhorizontalchart width=400 height=800></canvas>"));
+
+  chartContainer = $('#divpiechart');
+  chartObject = new Chart(chartContainer, {
+    type: 'doughnut',
+    data: {
+      labels: compareReposLabels,
+      datasets: [{
+        data: compareReposParticipants,
+        backgroundColor: colorArray
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: "Total Participant Comparison for: " + selectedRepoGroupName
+      },
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+
+  chartContainer_two = $('#divbarchart');
+  chartObject_two = new Chart(chartContainer_two, {
+    type: 'bar',
+    data: {
+      labels: compareReposLabels,
+      datasets: [{
+        data: compareReposMean,
+        backgroundColor: colorArray
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: "Mean Amount of Comments per Issue for: " + selectedRepoGroupName
+      },
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+
+  chartContainer_three = $('#divhorizontalchart');
+  chartObject_three = new Chart(chartContainer_three, {
+    type: 'horizontalBar',
+    data: {
+      labels: compareReposLabels,
+      datasets: [{
+        data: compareReposAvgDays,
+        backgroundColor: colorArray
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: "Average Days per Comment for: " + selectedRepoGroupName
+      },
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+
+  return false;
+}
+
 $(document).ready(function(){
 
   try{
@@ -327,6 +451,17 @@ $(document).ready(function(){
       if($('#repolist') != null){
         $('#repolist').remove();
       }
+
+      if($('#divpiechart') != null){
+        $('#divpiechart').remove();
+      }
+      if($('#divbarchart') != null){
+        $('#divbarchart').remove();
+      }
+      if($('#divhorizontalchart') != null){
+        $('#divhorizontalchart').remove();
+      }
+
       $('#testone').append($("<ul id=repolist></ul>"));
 
       if(document.activeElement.id == "testselectone"){
@@ -334,7 +469,6 @@ $(document).ready(function(){
 
           getSelectVars("#testselectone");
           getUrls(selectVars[0]);
-
           createRepo(urls[0]);
         }
       }

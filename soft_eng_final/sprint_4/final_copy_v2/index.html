@@ -13,13 +13,14 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.js"></script>
 
         <link rel="stylesheet" href="index.css">
+        <link href="https://fonts.googleapis.com/css?family=Kanit|Righteous&display=swap" rel="stylesheet">
 <!--        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
     </head>
     <body>
         <script src="index.js"></script>
 
         <div class="tab">
-            <button class="cardlinks" onclick="showCard(event, 'testone')">Repo Issue Data</button>
+            <button class="cardlinks" onclick="showCard(event, 'testone')">RÓÓepo Issue Data</button>
             <!-- <button class="cardlinks" onclick="showCard(event,'testtwo')">Test Two</button>
             <button class="cardlinks" onclick="showCard(event, 'testthree')">Test Three</button> -->
         </div>
@@ -30,10 +31,14 @@
                 </select>
                 <input type="search" placeholder="Filter by repo name..." class="searchrepo" id="searchRepoID" onkeyup="filterList()">
                 <div id="loadingSpinner" class="spinner"></div>
-
             </div>
             <br><br>
         </div>
+        <div id="graph_two"></div>
+        <br>
+        <div id="graph"></div>
+        <br>
+        <div id="graph_three"></div>
         <!-- <div class="cardcontent" id="testtwo">
             <div class="criteria">
                 <select class="testselectclass" id="testselecttwo"></select>
