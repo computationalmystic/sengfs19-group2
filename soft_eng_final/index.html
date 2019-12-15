@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title>test2</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Faster+One" rel="stylesheet"> 
+    <link rel="stylesheet" href="jStyle.css">
+
+<style>
+body {
+  background-color: lightblue;  
+}
+
+h1, h2 {
+  color: white;
+  text-align: center;
+}
+
+p {
+   font-family: 'Typewriter, serif', cursive;
+  font-size: 20px;
+  color:red;
+}
+</style>
+
+
+  </head>
+  <body>
+      <header>
+
+      </header>
+
+      <section>
+
+      </section>
+
+      <select id="locality-dropdown" name="locality" onchange="getcard()">
+        
+      </select>
+
+
+      <style>
+        select{
+          font-family: 'Typewriter, serif', cursive;
+           font-size: 17px;
+  padding: 10px 8px 10px 14px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  position: relative;
+  width: 120%;
+  /*background: transparent;
+  line-height: 1;
+  border: 0;
+  padding: 0;
+  border-radius: 0;
+  width: 120%;
+  position: relative;
+  z-index: 10;
+  font-size: 1em;*/
+
+}
+      </style>
+
+    <p id="outPut">_____________________ </p>
+    <p id='output1'></p>
+    <p id='output2'></p>
+    <p id='output3'></p>
+    <p id='output4'></p>
+    <p id='output5'></p>
+    <p id='output6'></p>
+    <p id='output7'></p>
+    <p id='output8'></p>
+    <p id='output9'></p>
+    <p id='output10'></p>
+
+    <script>
+    var header = document.querySelector('header');
+    var mydropdown = document.getElementById('locality-dropdown');
+
+    var select = document.querySelector('select');
+
+//extract api
+    var requestURL = 'http://augur.osshealth.io:5000/api/unstable/repo-groups';
+    var request = new XMLHttpRequest();
+    request.open('GET', requestURL);
+    request.responseType = 'json';
+    request.send();
+    var jsondata = request.response;
+
+    request.onload = function() {
+      var repo_groups = request.response;
+      populateHeader(repo_groups);
+      getdd(repo_groups);
+      // mydropdown.onchange = getcard(repo_groups);
+
+      // getcard(repo_groups);
+     // showData(repo-groups);
+    }
+
+//create header
+    function populateHeader(jsonObj) {
+      var myH1 = document.createElement('h1');
+      myH1.textContent = "Repository Group Info"
+      header.appendChild(myH1);
+
+      var myPara = document.createElement('p');
+      myPara.textContent = "augur";
+      header.appendChild(myPara);
+    }
+
+//prepare dropdown
+        var mydd = document.getElementById('locality-dropdown');
+
+        mydd.length = 0;
+
+        let defaultOption = document.createElement('option');
+        defaultOption.text = ' Please Choose Repo_groups';
+        mydd.add(defaultOption);
+        //mydd.selectedIndex = 0;
+//create dropdown list
+        function getdd(jsonObj){
+          var option; 
+          for (let i = 0; i < jsonObj.length ;i++){
+              option = document.createElement('option');
+              option.text = jsonObj[i]['rg_name'];
+              option.value = jsonObj[i]['repo_group_id'];
+              mydd.add(option);
+
+          }
+        }
+
+//make the dropdown item clickable
+        function getcard(){
+          var outPut;
+          var output1;
+          var output2;
+          var output3;
+          var output4;
+          var output5;
+          var output6;
+          var output7;
+          var output8;
+          var outPut9;
+          var output10;
+      
+          var index = mydropdown.selectedIndex;
+
+          outPut = document.getElementById('outPut');
+          output1 = document.getElementById('output1');
+          output2 = document.getElementById('output2');
+          output3 = document.getElementById('output3');
+          output4 = document.getElementById('output4'); 
+          output5 = document.getElementById('output5'); 
+          output6 = document.getElementById('output6'); 
+          output7 = document.getElementById('output7'); 
+          output8 = document.getElementById('output8'); 
+          output9 = document.getElementById('output9'); 
+          output10 = document.getElementById('output10'); 
+          
+          outPut.innerHTML = "repo group ID: " + request.response[index-1]['repo_group_id'];
+          output1.innerHTML = "repo group name: " + request.response[index-1]['rg_name'];
+          output2.innerHTML = "description: " + request.response[index-1]['rg_description'];
+          output3.innerHTML =  "Last modified: " + request.response[index-1]['rg_last_modified'];
+          output4.innerHTML = "rg_Type: " + request.response[index-1]['rg_type'];
+          output5.innerHTML = "rg-website" + request.response[index-1]['rg_website'];
+           output6.innerHTML = "rg_recache: " + request.response[index-1]['rg_recache'];
+          output7.innerHTML = "tool_source;"  + request.response[index-1]["tool_source"];
+          output8.innerHTML = "tool_version: " + request.response[index-1]['tool_version'];
+          output9.innerHTML =  "data_source " + request.response[index-1]['data_source'];
+          output10.innerHTML = "data_collection_date; " + request.response[index-1]["data_collection_date"];
+     
+
+          }
+
+ var repobacklog = "/issue-backlog";
+    url[0] = repo_groups +  request.response[index-1]['repo_group_id'] + repobacklog;
+    var request2 = new XMLHttpRequest();
+    request2.open('GET', url[0]);
+    request2.responseType = 'json';
+    request2.send();
+    var jsondata2 = request2.response;
+
+    request2.onload = function() {
+      var repo_groups2 = request2.response;
+      getbacklog(request2);
+      // mydropdown.onchange = getcard(repo_groups);
+
+      // getcard(repo_groups);
+     // showData(repo-groups);
+    }
+
+    function getbacklog(jsonObj){
+
+      var myH2 = document.createElement('h2');
+      myH2.textContent = jsonObj[1]['issue_backlog'];
+      header.appendChild(myH2);
+
+     // var myPara2 = document.createElement('p');
+      //myPara.textContent = 'repo ' + jsonObj[1]['repo_group_id'];
+      //header.appendChild(myPara);
+    }
+    </script>
+
+  </body>
+</html>
+Collapse
+
+
+
+
