@@ -1,7 +1,7 @@
 # Group 2- Sprint 4(Frondend team)
 
- - Samuel Jr. Frimpong,
- -  Raphael Hutchins,
+ - Samuel Jr. Frimpong
+ -  Raphael Hutchins
  - Xiaoyi Li
  - Jinbo Liu
 
